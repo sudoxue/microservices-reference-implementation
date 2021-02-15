@@ -76,7 +76,7 @@ Infrastructure
 # Deploy the resource groups and managed identities
 # These are deployed first in a separate template to avoid propagation delays with AAD
 export DEV_PREREQ_DEPLOYMENT_NAME=azuredeploy-prereqs-${DEPLOYMENT_SUFFIX}-dev
-az deployment create \
+az deployment sub create \
    --name $DEV_PREREQ_DEPLOYMENT_NAME \
    --location $LOCATION \
    --template-file ${PROJECT_ROOT}/azuredeploy-prereqs.json \
@@ -106,7 +106,7 @@ export SERVICETAGS_LOCATION=$(az account list-locations --query "[?name=='${LOCA
 
 # Deploy cluster and microservices Azure services
 export DEV_DEPLOYMENT_NAME=azuredeploy-${DEPLOYMENT_SUFFIX}-dev
-az group deployment create -g $RESOURCE_GROUP --name $DEV_DEPLOYMENT_NAME --template-file ${PROJECT_ROOT}/azuredeploy.json \
+az deployment group create -g $RESOURCE_GROUP --name $DEV_DEPLOYMENT_NAME --template-file ${PROJECT_ROOT}/azuredeploy.json \
 --parameters servicePrincipalClientId=${SP_APP_ID} \
             servicePrincipalClientSecret=${SP_CLIENT_SECRET} \
             servicePrincipalId=${SP_OBJECT_ID} \
@@ -134,7 +134,7 @@ export ACR_SERVER=$(az acr show -n $ACR_NAME --query loginServer -o tsv) && \
 export DELIVERY_REDIS_HOSTNAME=$(az group deployment show -g $RESOURCE_GROUP -n $DEV_DEPLOYMENT_NAME --query properties.outputs.deliveryRedisHostName.value -o tsv)
 
 # Restrict cluster egress traffic
-az group deployment create -g $RESOURCE_GROUP --name azuredeploy-firewall-${DEPLOYMENT_SUFFIX} --template-file ${PROJECT_ROOT}/azuredeploy-firewall.json \
+az deployment group create -g $RESOURCE_GROUP --name azuredeploy-firewall-${DEPLOYMENT_SUFFIX} --template-file ${PROJECT_ROOT}/azuredeploy-firewall.json \
 --parameters aksVnetName=${VNET_NAME} \
             aksClusterSubnetName=${CLUSTER_SUBNET_NAME} \
             aksClusterSubnetPrefix=${CLUSTER_SUBNET_PREFIX} \
