@@ -111,7 +111,7 @@ az deployment group create -g $RESOURCE_GROUP --name $DEV_DEPLOYMENT_NAME --temp
             servicePrincipalClientSecret=${SP_CLIENT_SECRET} \
             servicePrincipalId=${SP_OBJECT_ID} \
             kubernetesVersion=${KUBERNETES_VERSION} \
-            sshRSAPublicKey="$(cat ${SSH_PUBLIC_KEY_FILE})" \
+            sshRSAPublicKey="${SSH_PUBLIC_KEY_FILE}" \
             deliveryIdName=${DELIVERY_ID_NAME} \
             deliveryPrincipalId=${DELIVERY_ID_PRINCIPAL_ID} \
             droneSchedulerIdName=${DRONESCHEDULER_ID_NAME} \
